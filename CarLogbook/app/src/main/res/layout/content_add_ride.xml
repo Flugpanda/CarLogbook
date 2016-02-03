@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".view.AddRideActivity"
+    tools:showIn="@layout/activity_add_ride"
+    android:id="@+id/croll">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="false"
+        android:layout_alignParentEnd="false"
+        android:layout_alignParentTop="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="date"
+                android:ems="10"
+                android:id="@+id/dateInputText"
+                android:layout_above="@+id/endTimeInputText"
+                android:layout_alignLeft="@+id/startTimeInputText"
+                android:layout_alignStart="@+id/startTimeInputText"
+                android:layout_marginBottom="28dp"
+                android:hint="Datum"
+                android:onClick="setDateTime"
+                android:editable="false" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/startTimeInputText"
+                android:hint="Abfahrt"
+                android:layout_marginTop="100dp"
+                android:clickable="false"
+                android:onClick="setDateTime"
+                android:width="100dp"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/distanceStartText"
+                android:layout_alignStart="@+id/distanceStartText"
+                android:inputType="time"
+                android:editable="false" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:inputType="time"
+                android:ems="10"
+                android:id="@+id/endTimeInputText"
+                android:hint="Ankunft"
+                android:onClick="setDateTime"
+                android:width="100dp"
+                android:layout_alignTop="@+id/startTimeInputText"
+                android:layout_alignRight="@+id/distanceStartText"
+                android:layout_alignEnd="@+id/distanceStartText"
+                android:editable="false" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/distanceStartText"
+                android:hint="km Stand"
+                android:layout_marginTop="49dp"
+                android:layout_below="@+id/endTimeInputText"
+                android:layout_centerHorizontal="true"
+                android:inputType="number|numberDecimal" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:id="@+id/distacneEndText"
+                android:layout_below="@+id/distanceStartText"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="35dp"
+                android:hint="km Ende"
+                android:inputType="number|numberDecimal" />
+
+            <EditText
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/zielInputText"
+                android:width="300dp"
+                android:hint="Ziel"
+                android:layout_marginTop="30dp"
+                android:layout_below="@+id/distacneEndText"
+                android:layout_centerHorizontal="true" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save"
+                android:id="@+id/buttonSaveEntry"
+                android:layout_below="@+id/zielInputText"
+                android:layout_alignLeft="@+id/zielInputText"
+                android:layout_alignStart="@+id/zielInputText"
+                android:layout_marginTop="30dp"
+                android:clickable="true"
+                android:onClick="saveData" />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete"
+                android:id="@+id/buttonDeleteEntry"
+                android:layout_alignBottom="@+id/buttonSaveEntry"
+                android:layout_alignRight="@+id/zielInputText"
+                android:layout_alignEnd="@+id/zielInputText" />
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>

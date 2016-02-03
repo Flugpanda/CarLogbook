@@ -1,4 +1,4 @@
-package de.bastianb.carlogbook;
+package de.bastianb.carlogbook.view;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
@@ -18,7 +18,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class MainActivity extends AppCompatActivity {
+import de.bastianb.carlogbook.R;
+
+public class AddRideActivity extends AppCompatActivity {
 
     // UI References
     // get all the components from the view
@@ -45,9 +47,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_add_ride);
 
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMANY);
         timeFormatter = new SimpleDateFormat("hh:mm", Locale.GERMANY);
@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
 
         }catch (Exception ex){
             success = false;
-            Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Angabe muss in hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Sie muss im Format hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
