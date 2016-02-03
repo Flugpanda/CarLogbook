@@ -13,10 +13,8 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -24,12 +22,12 @@ public class MainActivity extends AppCompatActivity {
 
     // UI References
     // get all the components from the view
-    private EditText zielInputText;
+    private EditText arrivalInputText;
     private EditText dateInputText;
     private EditText startTimeInputText;
     private EditText endTimeInputText;
     private EditText distanceStartText;
-    private EditText distaceEndText;
+    private EditText distanceEndText;
 
     private DatePickerDialog datePickerDialog;
     private TimePickerDialog fromTimePickerDialog;
@@ -65,12 +63,12 @@ public class MainActivity extends AppCompatActivity {
      * find all resources and assign it to the local variables
      */
     private void findViewsById() {
-        zielInputText = (EditText) findViewById(R.id.zielInputText);
+        arrivalInputText = (EditText) findViewById(R.id.zielInputText);
         dateInputText = (EditText) findViewById(R.id.dateInputText);
         startTimeInputText = (EditText) findViewById(R.id.startTimeInputText);
         endTimeInputText = (EditText) findViewById(R.id.endTimeInputText);
         distanceStartText = (EditText) findViewById(R.id.distanceStartText);
-        distaceEndText = (EditText) findViewById(R.id.distacneEndText);
+        distanceEndText = (EditText) findViewById(R.id.distacneEndText);
 
         // disable the keyboard for editing
         dateInputText.setKeyListener(null);
@@ -133,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
         fromTimePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                startTimeInputText.setText(timeFormatter.format(selectedHour) + ":" + timeFormatter.format(selectedMinute));
+                startTimeInputText.setText(selectedHour + ":" + selectedMinute);
             }
         }, hour, minute, true);//Yes 24 hour time
         fromTimePickerDialog.setTitle("Select Time");
@@ -141,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
         toTimePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                endTimeInputText.setText(timeFormatter.format(selectedHour) + ":" + timeFormatter.format(selectedMinute));
+                endTimeInputText.setText(selectedHour + ":" + selectedMinute);
             }
         }, hour, minute, true);//Yes 24 hour time
         fromTimePickerDialog.setTitle("Select Time");
@@ -176,42 +174,50 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean checkInputs(){
 
+        boolean success = true;
+
         // get the distance
         try {
             distanceStart = Double.parseDouble(distanceStartText.getText().toString());
-            distanceEnd = Double.parseDouble(distaceEndText.getText().toString());
+            distanceEnd = Double.parseDouble(distanceEndText.getText().toString());
         } catch (Exception ex) {
+            success = false;
             Toast.makeText(this, "Der KM Stand für Anfang oder Ende ist nicht gültig", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         // get the time
-        try
-        {
+        try {
             startTime = timeFormatter.parse(startTimeInputText.getText().toString());
             endTime = timeFormatter.parse(endTimeInputText.getText().toString());
 
         }catch (Exception ex){
+            success = false;
             Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Angabe muss in hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
             return false;
         }
 
+        // validate the inputs
         if (distanceEnd <= distanceStart ) // check the distance
         {
-            Toast.makeText(this, "Der End-KM Stand darf nicht keiner sein als der Start", Toast.LENGTH_SHORT).show();
-            return false;
+            success = false;
+            Toast.makeText(getApplicationContext(), "Der End-KM Stand darf nicht keiner sein als der Start", Toast.LENGTH_SHORT).show();
         }
         else if(endTime.getTime() <= startTime.getTime()) // check the time
         {
-            Toast.makeText(this, "Die Ankunftszeit darf nicht keiner sein als die Startzeit. ", Toast.LENGTH_SHORT).show();
-            return false;
+            success = false;
+            Toast.makeText(getApplicationContext(), "Die Ankunftszeit darf nicht keiner oder gleich der Startzeit sein. ", Toast.LENGTH_SHORT).show();
+        }else if (arrivalInputText.getText().toString().isEmpty()) // check the text of the goal
+        {
+            success = false;
+            Toast.makeText(getApplicationContext(), "Es wurde kein Zeil eingegeben.", Toast.LENGTH_SHORT).show();
         }
 
-        return true;
+        return success;
     }
 
     /**
-     * Reset all inputvalues back to there defaults
+     * Reset all inputvalues back to thdistaceEndTextere defaults
      */
     private void resetValues(){
         distanceStart = 0.00;
@@ -221,11 +227,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Reset all input fields of the view
+     */
+    private void restView(){
+        initDefaultValues();
+        distanceStartText.setText(distanceEndText.getText().toString());
+        distanceEndText.setText("");
+        arrivalInputText.setText("");
+    }
+
+    /**
      * Process the click of the Save-Button
      *
      * @param view      the element that has been clicked
      */
     public void saveData(View view){
-        checkInputs();
+        if (checkInputs())
+        {
+            resetValues();
+            restView();
+        }
     }
 }
