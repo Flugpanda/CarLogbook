@@ -16,6 +16,8 @@ import android.widget.Toast;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,9 +36,12 @@ public class MainActivity extends AppCompatActivity {
     private TimePickerDialog toTimePickerDialog;
 
     private SimpleDateFormat dateFormatter;
+    private SimpleDateFormat timeFormatter;
 
     private Double distanceStart = 0.00;
     private Double distanceEnd = 0.00;
+    private Date startTime = null;
+    private Date endTime = null;
 
 
     @Override
@@ -47,10 +52,13 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         dateFormatter = new SimpleDateFormat("dd-MM-yyyy", Locale.GERMANY);
+        timeFormatter = new SimpleDateFormat("hh:mm", Locale.GERMANY);
 
         findViewsById();
         setDateField();
         setTimeFeald();
+
+        initDefaultValues();
     }
 
     /**
@@ -86,6 +94,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
+     * Set the current time and date to the default values of the view
+     */
+    private void initDefaultValues(){
+        Calendar cal = Calendar.getInstance();
+
+        dateInputText.setText(dateFormatter.format(cal.getTime()));
+        startTimeInputText.setText(timeFormatter.format(cal.getTime()));
+        endTimeInputText.setText(timeFormatter.format(cal.getTime()));
+    }
+
+    /**
      * Define the DatePickerDialoag
      */
     private void setDateField() {
@@ -114,8 +133,7 @@ public class MainActivity extends AppCompatActivity {
         fromTimePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                DecimalFormat formatter = new DecimalFormat("00");
-                startTimeInputText.setText(selectedHour + ":" + formatter.format(selectedMinute));
+                startTimeInputText.setText(timeFormatter.format(selectedHour) + ":" + timeFormatter.format(selectedMinute));
             }
         }, hour, minute, true);//Yes 24 hour time
         fromTimePickerDialog.setTitle("Select Time");
@@ -123,8 +141,7 @@ public class MainActivity extends AppCompatActivity {
         toTimePickerDialog = new TimePickerDialog(this, new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int selectedHour, int selectedMinute) {
-                DecimalFormat formatter = new DecimalFormat("00");
-                endTimeInputText.setText(selectedHour + ":" + formatter.format(selectedMinute));
+                endTimeInputText.setText(timeFormatter.format(selectedHour) + ":" + timeFormatter.format(selectedMinute));
             }
         }, hour, minute, true);//Yes 24 hour time
         fromTimePickerDialog.setTitle("Select Time");
@@ -159,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private boolean checkInputs(){
 
-        // check the distance
+        // get the distance
         try {
             distanceStart = Double.parseDouble(distanceStartText.getText().toString());
             distanceEnd = Double.parseDouble(distaceEndText.getText().toString());
@@ -168,12 +185,39 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
 
-        if (distanceEnd <= distanceStart ){
+        // get the time
+        try
+        {
+            startTime = timeFormatter.parse(startTimeInputText.getText().toString());
+            endTime = timeFormatter.parse(endTimeInputText.getText().toString());
+
+        }catch (Exception ex){
+            Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Angabe muss in hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        if (distanceEnd <= distanceStart ) // check the distance
+        {
             Toast.makeText(this, "Der End-KM Stand darf nicht keiner sein als der Start", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        else if(endTime.getTime() <= startTime.getTime()) // check the time
+        {
+            Toast.makeText(this, "Die Ankunftszeit darf nicht keiner sein als die Startzeit. ", Toast.LENGTH_SHORT).show();
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Reset all inputvalues back to there defaults
+     */
+    private void resetValues(){
+        distanceStart = 0.00;
+        distanceEnd = 0.00;
+        startTime = null;
+        endTime = null;
     }
 
     /**
