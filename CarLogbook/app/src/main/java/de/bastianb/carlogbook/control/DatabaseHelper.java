@@ -1,6 +1,8 @@
 package de.bastianb.carlogbook.control;
 
+import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.Dao;
@@ -8,18 +10,15 @@ import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
 
-import android.content.Context;
-import android.util.Log;
-
 import java.sql.SQLException;
+import java.util.Date;
 
+import de.bastianb.carlogbook.R;
 import de.bastianb.carlogbook.model.Driver;
 import de.bastianb.carlogbook.model.Ride;
 
-import de.bastianb.carlogbook.R;
-
 /**
- *
+ * This class handel's the database connection and provides the doas for the objects to persist them
  */
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
@@ -45,24 +44,40 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase db, ConnectionSource connectionSource) {
-//        try {
-//            Log.i(DatabaseHelper.class.getName(), "onCreate");
-//            TableUtils.createTable(connectionSource, Driver.class);
-//            TableUtils.createTable(connectionSource, Ride.class);
-//        } catch (SQLException e) {
-//            Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
-//            throw new RuntimeException(e);
-//        }
-//
-//        // here we try inserting data in the on-create as a test
-//        RuntimeExceptionDao<SimpleData, Integer> dao = getSimpleDataDao();
-//        long millis = System.currentTimeMillis();
-//        // create some entries in the onCreate
-//        SimpleData simple = new SimpleData(millis);
-//        dao.create(simple);
-//        simple = new SimpleData(millis + 1);
-//        dao.create(simple);
-//        Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
+        try {
+            Log.i(DatabaseHelper.class.getName(), "onCreate");
+            TableUtils.createTable(connectionSource, Driver.class);
+            TableUtils.createTable(connectionSource, Ride.class);
+        } catch (SQLException e) {
+            Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
+            throw new RuntimeException(e);
+        }
+
+//        testInsertion();
+    }
+
+    /**
+     * Insert some Data to test the creation of the tables
+     */
+    private void testInsertion(){
+        // here we try inserting data in the on-create as a test
+        RuntimeExceptionDao<Driver, Integer> daoDriver = getDriverRuntimeDao();
+        RuntimeExceptionDao<Ride, Integer> daoRide = getRideRuntimeDao();
+
+        // messure time to create the objects and persist them
+        long millis = System.currentTimeMillis();
+
+        // create some entries in the onCreate
+        Driver driver = new Driver("X-XX-000", "Frist", "Entry");
+        Ride ride = new Ride(new Date(), new Date(), 0.00, 1.00, "TestEntry");
+        try {
+            driverDao.create(driver);
+            rideDao.create(ride);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
     }
 
     /**
@@ -86,31 +101,56 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
      * value.
      */
-//    public Dao<Driver, Integer> getDao() throws SQLException {
-//        if (simpleDao == null) {
-//            simpleDao = getDao(SimpleData.class);
-//        }
-//        return simpleDao;
-//    }
+    public Dao<Driver, Integer> getDriverDao() throws SQLException {
+        if (driverDao == null) {
+            driverDao = getDao(Driver.class);
+        }
+        return driverDao;
+    }
 
-//    /**
-//     * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
-//     * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
-//     */
-//    public RuntimeExceptionDao<SimpleData, Integer> getSimpleDataDao() {
-//        if (simpleRuntimeDao == null) {
-//            simpleRuntimeDao = getRuntimeExceptionDao(SimpleData.class);
-//        }
-//        return simpleRuntimeDao;
-//    }
+    /**
+     * Returns the Database Access Object (DAO) for our SimpleData class. It will create it or just give the cached
+     * value.
+     */
+    public Dao<Ride, Integer> getRideDao() throws SQLException {
+        if (rideDao == null) {
+            rideDao = getDao(Ride.class);
+        }
+        return rideDao;
+    }
+
+    /**
+     * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
+     * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+     */
+    public RuntimeExceptionDao<Driver, Integer> getDriverRuntimeDao() {
+        if (driverRuntimeDao == null) {
+            driverRuntimeDao = getRuntimeExceptionDao(Driver.class);
+        }
+        return driverRuntimeDao;
+    }
+
+    /**
+     * Returns the RuntimeExceptionDao (Database Access Object) version of a Dao for our SimpleData class. It will
+     * create it or just give the cached value. RuntimeExceptionDao only through RuntimeExceptions.
+     */
+    public RuntimeExceptionDao<Ride, Integer> getRideRuntimeDao() {
+        if (rideRuntimeDao == null) {
+            rideRuntimeDao = getRuntimeExceptionDao(Ride.class);
+        }
+        return rideRuntimeDao;
+    }
 
     /**
      * Close the database connections and clear any cached DAOs.
      */
     @Override
     public void close() {
-//        super.close();
-//        simpleDao = null;
-//        simpleRuntimeDao = null;
+        super.close();
+        driverDao = null;
+        rideDao = null;
+
+        driverRuntimeDao = null;
+        rideRuntimeDao = null;
     }
 }

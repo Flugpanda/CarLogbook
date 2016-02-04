@@ -25,7 +25,7 @@ public class Ride {
     @DatabaseField
     private String goal = "";
 
-    public Ride(Date startTime, Double distanceEnd, Double distanceStart, Date endTime, String goal) {
+    public Ride(Date startTime, Date endTime, Double distanceEnd, Double distanceStart, String goal) {
         this.startTime = startTime;
         this.distanceEnd = distanceEnd;
         this.distanceStart = distanceStart;
