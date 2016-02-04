@@ -1,0 +1,49 @@
+#
+# generated on 2016/02/04 11:44:10
+#
+# --table-start--
+dataClass=de.bastianb.carlogbook.model.Driver
+tableName=Driver
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=sureName
+# --field-end--
+# --field-start--
+fieldName=lastName
+# --field-end--
+# --field-start--
+fieldName=carsign
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=de.bastianb.carlogbook.model.Ride
+tableName=Rides
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=distanceStart
+# --field-end--
+# --field-start--
+fieldName=distanceEnd
+# --field-end--
+# --field-start--
+fieldName=startTime
+# --field-end--
+# --field-start--
+fieldName=endTime
+# --field-end--
+# --field-start--
+fieldName=goal
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
