@@ -28,19 +28,26 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/spinnerDrivers"
+                android:layout_below="@+id/textViewDriverForRide"
+                android:layout_centerHorizontal="true" />
+
             <EditText
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:inputType="date"
                 android:ems="10"
                 android:id="@+id/dateInputText"
+                android:hint="Datum"
+                android:onClick="setDateTime"
+                android:editable="false"
                 android:layout_above="@+id/endTimeInputText"
                 android:layout_alignLeft="@+id/startTimeInputText"
                 android:layout_alignStart="@+id/startTimeInputText"
-                android:layout_marginBottom="28dp"
-                android:hint="Datum"
-                android:onClick="setDateTime"
-                android:editable="false" />
+                android:layout_marginBottom="30dp" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -48,15 +55,15 @@
                 android:ems="10"
                 android:id="@+id/startTimeInputText"
                 android:hint="Abfahrt"
-                android:layout_marginTop="100dp"
+                android:layout_marginTop="72dp"
                 android:clickable="false"
                 android:onClick="setDateTime"
                 android:width="100dp"
-                android:layout_alignParentTop="true"
-                android:layout_alignLeft="@+id/distanceStartText"
-                android:layout_alignStart="@+id/distanceStartText"
                 android:inputType="time"
-                android:editable="false" />
+                android:editable="false"
+                android:layout_below="@+id/spinnerDrivers"
+                android:layout_alignLeft="@+id/distanceStartText"
+                android:layout_alignStart="@+id/distanceStartText" />
 
             <EditText
                 android:layout_width="wrap_content"
@@ -124,6 +131,18 @@
                 android:layout_alignBottom="@+id/buttonSaveEntry"
                 android:layout_alignRight="@+id/zielInputText"
                 android:layout_alignEnd="@+id/zielInputText" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:text="Fahrer"
+                android:id="@+id/textViewDriverForRide"
+                android:layout_alignParentTop="true"
+                android:layout_alignLeft="@+id/spinnerDrivers"
+                android:layout_alignStart="@+id/spinnerDrivers"
+                android:layout_marginTop="10dp" />
+
         </RelativeLayout>
     </ScrollView>
 

@@ -2,6 +2,7 @@ package de.bastianb.carlogbook.control;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.design.widget.TabLayout;
 import android.util.Log;
 
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
@@ -23,9 +24,9 @@ import de.bastianb.carlogbook.model.Ride;
 public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application -- change to something appropriate for your app
-    private static final String DATABASE_NAME = "carRides.db";
+    private static final String DATABASE_NAME = "CarRideLogbook.db";
     // any time you make changes to your database objects, you may have to increase the database version
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 3;
 
     // the DAO object we use to access the SimpleData table
     private Dao<Driver, Integer> driverDao = null;
@@ -52,32 +53,6 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
             throw new RuntimeException(e);
         }
-
-//        testInsertion();
-    }
-
-    /**
-     * Insert some Data to test the creation of the tables
-     */
-    private void testInsertion(){
-        // here we try inserting data in the on-create as a test
-        RuntimeExceptionDao<Driver, Integer> daoDriver = getDriverRuntimeDao();
-        RuntimeExceptionDao<Ride, Integer> daoRide = getRideRuntimeDao();
-
-        // messure time to create the objects and persist them
-        long millis = System.currentTimeMillis();
-
-        // create some entries in the onCreate
-        Driver driver = new Driver("X-XX-000", "Frist", "Entry");
-        Ride ride = new Ride(new Date(), new Date(), 0.00, 1.00, "TestEntry");
-        try {
-            driverDao.create(driver);
-            rideDao.create(ride);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        Log.i(DatabaseHelper.class.getName(), "created new entries in onCreate: " + millis);
     }
 
     /**
@@ -86,15 +61,16 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase db, ConnectionSource connectionSource, int oldVersion, int newVersion) {
-//        try {
-//            Log.i(DatabaseHelper.class.getName(), "onUpgrade");
-//            TableUtils.dropTable(connectionSource, SimpleData.class, true);
-//            // after we drop the old databases, we create the new ones
-//            onCreate(db, connectionSource);
-//        } catch (SQLException e) {
-//            Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
-//            throw new RuntimeException(e);
-//        }
+        try {
+            Log.i(DatabaseHelper.class.getName(), "onUpgrade");
+            TableUtils.dropTable(connectionSource, Driver.class, true);
+            TableUtils.dropTable(connectionSource, Ride.class, true);
+            // after we drop the old databases, we create the new ones
+            onCreate(db, connectionSource);
+        } catch (SQLException e) {
+            Log.e(DatabaseHelper.class.getName(), "Can't drop databases", e);
+            throw new RuntimeException(e);
+        }
     }
 
     /**

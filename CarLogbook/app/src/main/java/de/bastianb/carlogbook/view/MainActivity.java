@@ -35,8 +35,21 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * open the activity to add a new ride
+     * @param view
+     */
     public void openAddRideActivity(View view){
         Intent intent = new Intent(this, AddRideActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * open the activity to add an new driver
+     * @param view
+     */
+    public void openAddDriverActivity(View view){
+        Intent intent = new Intent(this, ListDriversActivity.class);
         startActivity(intent);
     }
 }

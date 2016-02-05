@@ -10,7 +10,7 @@ import com.j256.ormlite.table.DatabaseTable;
 public class Driver {
 
     @DatabaseField(generatedId = true)
-    private long id;
+    private int id;
     @DatabaseField
     private String sureName = "";
     @DatabaseField
@@ -18,7 +18,11 @@ public class Driver {
     @DatabaseField
     private String carsign = "";
 
-    public Driver(String carsign, String lastName, String sureName) {
+    public Driver (){
+
+    }
+
+    public Driver(String sureName, String lastName, String carsign) {
         this.carsign = carsign;
         this.lastName = lastName;
         this.sureName = sureName;
@@ -32,11 +36,11 @@ public class Driver {
         this.carsign = carsign;
     }
 
-    public long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

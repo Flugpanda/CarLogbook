@@ -13,7 +13,7 @@ import java.util.Date;
 public class Ride {
 
     @DatabaseField(generatedId = true)
-    private Long id;
+    private int id;
     @DatabaseField
     private Double distanceStart = 0.00;
     @DatabaseField
@@ -23,14 +23,20 @@ public class Ride {
     @DatabaseField
     private Date endTime = null;
     @DatabaseField
+    private Date day = null;
+    @DatabaseField
     private String goal = "";
+    @DatabaseField(foreign = true)
+    private Driver driver;
 
-    public Ride(Date startTime, Date endTime, Double distanceEnd, Double distanceStart, String goal) {
+    public Ride(Date day, Date startTime, Date endTime, Double distanceEnd, Double distanceStart, String goal, Driver driver) {
+        this.day = day;
         this.startTime = startTime;
         this.distanceEnd = distanceEnd;
         this.distanceStart = distanceStart;
         this.endTime = endTime;
         this.goal = goal;
+        this.driver = driver;
     }
 
     public Ride() {
@@ -68,11 +74,11 @@ public class Ride {
         this.goal = goal;
     }
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 
@@ -82,5 +88,21 @@ public class Ride {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public Driver getDriver() {
+        return driver;
+    }
+
+    public void setDriver(Driver driver) {
+        this.driver = driver;
+    }
+
+    public Date getDay() {
+        return day;
+    }
+
+    public void setDay(Date day) {
+        this.day = day;
     }
 }

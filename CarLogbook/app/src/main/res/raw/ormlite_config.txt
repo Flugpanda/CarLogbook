@@ -1,5 +1,5 @@
 #
-# generated on 2016/02/04 11:44:10
+# generated on 2016/02/05 02:14:14
 #
 # --table-start--
 dataClass=de.bastianb.carlogbook.model.Driver
@@ -42,7 +42,14 @@ fieldName=startTime
 fieldName=endTime
 # --field-end--
 # --field-start--
+fieldName=day
+# --field-end--
+# --field-start--
 fieldName=goal
+# --field-end--
+# --field-start--
+fieldName=driver
+foreign=true
 # --field-end--
 # --table-fields-end--
 # --table-end--

@@ -19,10 +19,22 @@
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Neuer Eintrag"
+        android:text="Neue Fahrt eintragen"
         android:id="@+id/buttonOpenAddRideActivity"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
-        android:onClick="openAddRideActivity" />
+        android:onClick="openAddRideActivity"
+        android:width="250dp" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Neuen Fahrer eintragen"
+        android:id="@+id/buttonAddDriver"
+        android:layout_below="@+id/buttonOpenAddRideActivity"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:width="250dp"
+        android:onClick="openAddDriverActivity" />
 </RelativeLayout>

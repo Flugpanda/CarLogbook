@@ -27,4 +27,5 @@ dependencies {
     compile files('libs/ormlite/ormlite-android-4.48.jar')
     compile files('libs/ormlite/ormlite-android-4.48-javadoc.jar')
     compile files('libs/ormlite/ormlite-core-4.48.jar')
+    compile 'com.google.android.gms:play-services-appindexing:8.1.0'
 }

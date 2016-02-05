@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".view.AddDriverActivity"
+    tools:showIn="@layout/activity_list_drivers"
+    android:id="@+id/croll">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Fahrer"
+        android:id="@+id/textViewDriver"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/listViewDrivers"
+        android:layout_alignStart="@+id/listViewDrivers"
+        android:layout_marginTop="30dp" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:id="@+id/listViewDrivers"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="100dp"
+        android:layout_alignParentLeft="false"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:choiceMode="singleChoice"
+        android:listSelector="@color/pressed_color"
+        android:smoothScrollbar="true"
+        android:scrollIndicators="right"
+        android:background="@drawable/bg_key"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="neuen Fahrer anlegen"
+        android:id="@+id/buttonAddDriver"
+        android:layout_below="@+id/listViewDrivers"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="36dp"
+        android:onClick="openAddDriverActivity" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Fahrer bearbeiten"
+        android:id="@+id/buttonEditDriver"
+        android:layout_below="@+id/buttonAddDriver"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="35dp"
+        android:onClick="openEditDriverActivity" />
+
+</RelativeLayout>
