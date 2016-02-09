@@ -97,6 +97,8 @@ public class ListDriversActivity extends OrmLiteBaseActivity<DatabaseHelper> {
      * @param view
      */
     public void openAddDriverActivity(View view) {
+        selection = "";
+
         Intent intent = new Intent(this, AddDriverActivity.class);
         startActivityForResult(intent,0);
     }
@@ -117,7 +119,7 @@ public class ListDriversActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
         // prepate the intent with the id of the driver as payload
         Intent intent = new Intent(this, AddDriverActivity.class);
-        intent.putExtra("DRIVER_ID",toEdit.getId());
+        intent.putExtra(String.valueOf(R.string.query_identifier_ride),toEdit.getId());
 
         // reset the selection
         selection = "";

@@ -36,20 +36,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * open the activity to add a new ride
+     * open the activity to list all rides
      * @param view
      */
-    public void openAddRideActivity(View view){
-        Intent intent = new Intent(this, AddRideActivity.class);
+    public void openListRidesActivity(View view){
+        Intent intent = new Intent(this, ListRidesActivity.class);
         startActivity(intent);
     }
 
     /**
-     * open the activity to add an new driver
+     * open the activity to list all drivers
      * @param view
      */
-    public void openAddDriverActivity(View view){
+    public void openListDriversActivity(View view){
         Intent intent = new Intent(this, ListDriversActivity.class);
+        startActivity(intent);
+    }
+
+    public void openAddRidesActivity(View view){
+        Intent intent = new Intent(this, AddRideActivity.class);
         startActivity(intent);
     }
 }

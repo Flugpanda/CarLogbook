@@ -16,7 +16,10 @@ import android.widget.Toast;
 
 import com.j256.ormlite.android.apptools.OrmLiteBaseActivity;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.QueryBuilder;
 
+import java.sql.SQLException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -30,6 +33,9 @@ import de.bastianb.carlogbook.control.DatabaseHelper;
 import de.bastianb.carlogbook.model.Driver;
 import de.bastianb.carlogbook.model.Ride;
 
+/**
+ * This activity is used to add, edit and delete rides
+ */
 public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
     // UI References
@@ -45,20 +51,23 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
     private TimePickerDialog fromTimePickerDialog;
     private TimePickerDialog toTimePickerDialog;
 
+    private ArrayAdapter adapter;
     private Spinner driverSpinner;
 
     // Values
     private HashMap<String, Driver> driverDictionary;
     private String selection = "";
 
+    private Ride editOrRemoveRide = null;
+
     private SimpleDateFormat dateFormatter;
     private SimpleDateFormat timeFormatter;
 
     private Double distanceStart = 0.00;
     private Double distanceEnd = 0.00;
-    private Date day = null;
-    private Date startTime = null;
-    private Date endTime = null;
+    private String day = null;
+    private String startTime = null;
+    private String endTime = null;
     private String goal = "";
     private Driver driver = null;
 
@@ -74,8 +83,20 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
         findViewsById();
         setDateField();
         setTimeFeald();
-
         initDefaultValues();
+
+        if (getIntent().getExtras() == null) {
+            return;
+        }
+
+        try {
+            int idRide = (int) getIntent().getExtras().get(String.valueOf(R.string.query_identifier_ride));
+            int idDriver = (int) getIntent().getExtras().get(String.valueOf(R.string.query_identifier_driver));
+            editOrRemoveRide = getRideByID(idRide, idDriver);
+            initEditing();
+        } catch (Exception ex) {
+            editOrRemoveRide = null;
+        }
     }
 
     /**
@@ -99,6 +120,7 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // An item was selected. You can retrieve the selected item using
+                view.setSelected(true);
                 selection = String.valueOf(parent.getItemAtPosition(position));
             }
 
@@ -107,6 +129,30 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
             }
         });
+    }
+
+    /**
+     * Fill all the fields with the values from the ride
+     */
+    private void initEditing() {
+        if (editOrRemoveRide == null) {
+            initDefaultValues();
+            Toast.makeText(this, "Die gewählte Fahrt konnte in der Datenbank nicht gefunden werden", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        arrivalInputText.setText(editOrRemoveRide.getGoal());
+        dateInputText.setText(editOrRemoveRide.getDay());
+        startTimeInputText.setText(editOrRemoveRide.getStartTime());
+        endTimeInputText.setText(editOrRemoveRide.getEndTime());
+        distanceStartText.setText(editOrRemoveRide.getDistanceStart().toString());
+        distanceEndText.setText(editOrRemoveRide.getDistanceEnd().toString());
+
+        try {
+            driverSpinner.setSelection(adapter.getPosition(editOrRemoveRide.getDriver().getLastName() + ", " + editOrRemoveRide.getDriver().getSureName()));
+        } catch (Exception ex) {
+
+        }
 
     }
 
@@ -155,7 +201,7 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
         List<String> keyList = new ArrayList<String>(driverDictionary.keySet());
 
         // Create an ArrayAdapter using the string array and a default spinner layout
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, keyList);
+        adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, keyList);
 
         // Specify the layout to use when the list of choices appears
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -229,6 +275,35 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
     }
 
     /**
+     * query the ride by the given id
+     *
+     * @param idRide   the id of the ride
+     * @param idDriver the id of the driver
+     * @return the ride object from the db with the joint driver
+     */
+    private Ride getRideByID(int idRide, int idDriver) {
+        Ride queriedRide = null;
+
+        // get the daos
+        RuntimeExceptionDao<Ride, Integer> rideDao = getHelper().getRideRuntimeDao();
+        RuntimeExceptionDao<Driver, Integer> driverDao = getHelper().getDriverRuntimeDao();
+
+        // Because ORMLite is not able to do a right join
+        // web have to query the objects secretly
+        queriedRide = rideDao.queryForId(idRide);
+        try {
+            // try to set the driver object
+            queriedRide.setDriver(driverDao.queryForId(idDriver));
+        } catch (Exception e) {
+            // creset the orl foreign key
+            queriedRide.getDriver().setId(idDriver);
+            e.printStackTrace();
+        }
+
+        return queriedRide;
+    }
+
+    /**
      * Convert the inputs and validate them
      *
      * @return boolean      true if successful, false if not
@@ -236,10 +311,12 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
     private boolean checkInputs() {
 
         boolean success = true;
+        Date timeStart = null;
+        Date timeEnd = null;
 
         // get the day
         try {
-            day = dateFormatter.parse(dateInputText.getText().toString());
+            day = dateInputText.getText().toString();
         } catch (Exception ex) {
             success = false;
             Toast.makeText(this, "Das eingegebene Datum ist ungültig. Es muss in der From DD-MM-JJJJ erfolgen.", Toast.LENGTH_SHORT).show();
@@ -258,9 +335,16 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
 
         // get the time
         try {
-            startTime = timeFormatter.parse(startTimeInputText.getText().toString());
-            endTime = timeFormatter.parse(endTimeInputText.getText().toString());
+            startTime = startTimeInputText.getText().toString();
+            endTime = endTimeInputText.getText().toString();
 
+            timeStart = timeFormatter.parse(startTime);
+            timeEnd = timeFormatter.parse(endTime);
+
+        } catch (ParseException pex) {
+            success = false;
+            Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Sie muss im Format hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
+            return false;
         } catch (Exception ex) {
             success = false;
             Toast.makeText(this, "Die Eingaben für die Zeit sind nicht gültig. Sie muss im Format hh:mm erfolgen.", Toast.LENGTH_SHORT).show();
@@ -290,7 +374,7 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
         {
             success = false;
             Toast.makeText(getApplicationContext(), "Der End-KM Stand darf nicht keiner sein als der Start", Toast.LENGTH_SHORT).show();
-        } else if (endTime.getTime() <= startTime.getTime()) // check the time
+        } else if (timeEnd.getTime() <= timeStart.getTime()) // check the time
         {
             success = false;
             Toast.makeText(getApplicationContext(), "Die Ankunftszeit darf nicht keiner oder gleich der Startzeit sein. ", Toast.LENGTH_SHORT).show();
@@ -331,25 +415,33 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
      *
      * @param view the element that has been clicked
      */
-    public void saveData(View view) {
+    public void saveRide(View view) {
         if (checkInputs()) {
 
             try {
-                // create the new object
-                Ride newRide = new Ride(day, startTime, endTime, distanceEnd, distanceStart, goal, driver);
+                if (editOrRemoveRide == null) // check if the object already exists
+                {
+                    // create the new object
+                    editOrRemoveRide = new Ride(day, startTime, endTime, distanceEnd, distanceStart, goal, driver);
+                } else {
+                    editOrRemoveRide.setDay(day);
+                    editOrRemoveRide.setStartTime(startTime);
+                    editOrRemoveRide.setEndTime(endTime);
+                    editOrRemoveRide.setDistanceStart(distanceStart);
+                    editOrRemoveRide.setDistanceEnd(distanceEnd);
+                    editOrRemoveRide.setGoal(goal);
+                    editOrRemoveRide.setDriver(driver);
+                }
+
 
                 // get the dao
                 RuntimeExceptionDao<Ride, Integer> rideDao = getHelper().getRideRuntimeDao();
 
                 // persist the data
-                rideDao.createOrUpdate(newRide);
+                rideDao.createOrUpdate(editOrRemoveRide);
 
-                // set the result code
-                setResult(0);
-
-                dispose();
-
-                finish();
+                // close
+                close();
             } catch (Exception ex) {
                 return;
             }
@@ -357,13 +449,37 @@ public class AddRideActivity extends OrmLiteBaseActivity<DatabaseHelper> {
     }
 
     /**
-     * free resources
+     * Delete the ride from the db
+     *
+     * @param view the element of the view that has been clicked
      */
-    private void dispose() {
-        resetValues();
-        resetView();
-        driverDictionary.clear();
-        driverDictionary = null;
-        driver = null;
+    public void deleteRide(View view){
+        if (editOrRemoveRide == null){
+            Toast.makeText(this, "Der aktuelle Eintrag ist noch nicht gespeicher und kann daher nicht gelöscht werden.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // get the dao
+        RuntimeExceptionDao<Ride, Integer> rideDao = getHelper().getRideRuntimeDao();
+
+        // delete the entry
+        rideDao.delete(editOrRemoveRide);
+
+        // close
+        close();
+    }
+
+    /**
+     * close this activity
+     */
+    private void close(){
+        // set the result code
+        setResult(0);
+
+        // reset the ride object
+        editOrRemoveRide = null;
+
+        // close the activity
+        finish();
     }
 }

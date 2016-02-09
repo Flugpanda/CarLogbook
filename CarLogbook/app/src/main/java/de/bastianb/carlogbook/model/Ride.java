@@ -19,17 +19,17 @@ public class Ride {
     @DatabaseField
     private Double distanceEnd = 0.00;
     @DatabaseField
-    private Date startTime = null;
+    private String startTime = null;
     @DatabaseField
-    private Date endTime = null;
+    private String endTime = null;
     @DatabaseField
-    private Date day = null;
+    private String day = null;
     @DatabaseField
     private String goal = "";
     @DatabaseField(foreign = true)
     private Driver driver;
 
-    public Ride(Date day, Date startTime, Date endTime, Double distanceEnd, Double distanceStart, String goal, Driver driver) {
+    public Ride(String day, String startTime, String endTime, Double distanceEnd, Double distanceStart, String goal, Driver driver) {
         this.day = day;
         this.startTime = startTime;
         this.distanceEnd = distanceEnd;
@@ -58,11 +58,11 @@ public class Ride {
         this.distanceStart = distanceStart;
     }
 
-    public Date getEndTime() {
+    public String getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(String endTime) {
         this.endTime = endTime;
     }
 
@@ -82,11 +82,11 @@ public class Ride {
         this.id = id;
     }
 
-    public Date getStartTime() {
+    public String getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Date startTime) {
+    public void setStartTime(String startTime) {
         this.startTime = startTime;
     }
 
@@ -98,11 +98,11 @@ public class Ride {
         this.driver = driver;
     }
 
-    public Date getDay() {
+    public String getDay() {
         return day;
     }
 
-    public void setDay(Date day) {
+    public void setDay(String day) {
         this.day = day;
     }
 }

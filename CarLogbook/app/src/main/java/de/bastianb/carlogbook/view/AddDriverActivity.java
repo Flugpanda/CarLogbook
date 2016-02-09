@@ -42,7 +42,7 @@ public class AddDriverActivity extends OrmLiteBaseActivity<DatabaseHelper> {
         }
 
         try {
-            int id = (int) getIntent().getExtras().get("DRIVER_ID");
+            int id = (int) getIntent().getExtras().get(String.valueOf(R.string.query_identifier_ride));
             editOrRemoveDriver = getDriverByID(id);
             initEditing();
         } catch (Exception ex) {

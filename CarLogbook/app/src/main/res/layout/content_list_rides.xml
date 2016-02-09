@@ -1,6 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context=".view.ListRidesActivity"
+    tools:showIn="@layout/activity_list_rides"
+    android:id="@+id/croll">
 
-</LinearLayout>
+    <ExpandableListView
+        android:layout_width="wrap_content"
+        android:layout_height="400dp"
+        android:id="@+id/expandableListViewRides"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:listSelector="@color/pressed_color"
+        android:background="@drawable/bg_key"
+        android:smoothScrollbar="true"
+        android:scrollIndicators="right"
+        android:scrollingCache="true" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editTextFromDate"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginLeft="30dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="30dp"
+        android:hint="Von"
+        android:textAlignment="center"
+        android:onClick="setDateForRideSelection" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:inputType="date"
+        android:ems="10"
+        android:id="@+id/editTextToDate"
+        android:layout_alignBottom="@+id/editTextFromDate"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginEnd="30dp"
+        android:hint="Bis"
+        android:editable="false"
+        android:textAlignment="center"
+        android:onClick="setDateForRideSelection" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bearbeiten"
+        android:id="@+id/buttonEditRide"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/expandableListViewRides"
+        android:layout_alignStart="@+id/expandableListViewRides"
+        android:layout_marginBottom="30dp"
+        android:onClick="editTheSelectedRide" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Von"
+        android:id="@+id/textViewFrom"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/editTextFromDate"
+        android:layout_alignStart="@+id/editTextFromDate"
+        android:layout_marginTop="10dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="Bis"
+        android:id="@+id/textViewTo"
+        android:layout_alignParentTop="true"
+        android:layout_alignLeft="@+id/editTextToDate"
+        android:layout_alignStart="@+id/editTextToDate"
+        android:layout_marginTop="10dp" />
+</RelativeLayout>

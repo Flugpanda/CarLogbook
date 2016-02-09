@@ -24,7 +24,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="70dp"
-        android:onClick="openAddRideActivity"
+        android:onClick="openAddRidesActivity"
         android:width="250dp" />
 
     <Button
@@ -36,5 +36,16 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:width="250dp"
-        android:onClick="openAddDriverActivity" />
+        android:onClick="openListDriversActivity" />
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="List Rides"
+        android:id="@+id/buttonListRides"
+        android:layout_below="@+id/buttonAddDriver"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="154dp"
+        android:onClick="openListRidesActivity" />
 </RelativeLayout>
